@@ -1,0 +1,28 @@
+name: "auto-deploy"
+
+on:
+  push:
+    branches: ["*"]
+
+env:
+  CLOUDFLARE_API_TOKEN: ALElTeQPvQv0nqoKjYZVNG9D4-5DJRw8tCXwJ8BO
+  CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
+
+jobs:
+  build:
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@v3"
+      
+      - name: "Install wrangler"
+        run: "npm install wrangler -g"
+
+      - name: "Publish (main)"
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: "make deploy-main"
+
+      - name: "Publish (not main)"
+        if: ${{ github.ref != 'refs/heads/main' }}
+        run: "make deploy"
+
