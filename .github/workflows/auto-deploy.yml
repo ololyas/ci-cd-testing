@@ -9,7 +9,7 @@ env:
   CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
 
 jobs:
-  build:
+  deploy:
     runs-on: "ubuntu-20.04"
     steps:
       - name: "Checkout repository"
