@@ -31,7 +31,7 @@ jobs:
           secret: ${{ github.token }}
           approvers: ololyas
       - name: "Deploy to PROD env"
-        run: "echo make deploy"
+        run: "make deploy"
 
 
 # on:
