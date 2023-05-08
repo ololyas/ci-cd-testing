@@ -30,6 +30,9 @@ jobs:
         with:
           secret: ${{ github.token }}
           approvers: ololyas
+          minimum-approvals: 1
+          issue-title: "Deploy to PROD env"
+          issue-body: "Please approve or deny the deployment."
       - name: "Deploy to PROD env"
         run: "make deploy"
 
