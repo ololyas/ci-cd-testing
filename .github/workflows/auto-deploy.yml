@@ -1,12 +1,13 @@
 name: "auto-deploy"
 
-on:
-  push:
-    branches: ["*"]
 
 env:
   CLOUDFLARE_API_TOKEN: ALElTeQPvQv0nqoKjYZVNG9D4-5DJRw8tCXwJ8BO
   CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
+
+on:
+  push:
+    branches: ["*"]
 
 jobs:
   deploy:
@@ -24,5 +25,43 @@ jobs:
 
       - name: "Publish (not main)"
         if: ${{ github.ref != 'refs/heads/main' }}
+        run: "echo deploying to stging"
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.token }}
+          approvers: bj-nostra, arzitow, ololyas, mario-nostra-ai, nostrascott
+      - name: "Deploy to PROD env"
         run: "make deploy"
 
+
+# on:
+#   pull_request:
+#     branches: ["*"]
+#     types: [opened, synchronize]
+
+# jobs:
+#   lint:
+#     runs-on: "ubuntu-20.04"
+#     steps:
+#       - name: "Checkout repository"
+#         uses: "actions/checkout@v3"
+      
+#       - name: "Install linter"
+#         run: "npm install linter -g"
+
+#       - name: "Run linter"
+#         run: "make lint"
+
+#   deploy-stg:
+#     runs-on: "ubuntu-20.04"
+#     if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+#     steps:
+#       - name: "Checkout repository"
+#         uses: "actions/checkout@v3"
+      
+#       - name: "Install wrangler"
+#         run: "npm install wrangler -g"
+
+#       - name: "Deploy to STG env"
+#         run: "make deploy-stg"
+  
