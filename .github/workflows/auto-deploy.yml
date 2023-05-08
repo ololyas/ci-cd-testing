@@ -1,14 +1,27 @@
 name: "auto-deploy"
 
-on:
-  push:
-    branches: ["*"]
 
 env:
   CLOUDFLARE_API_TOKEN: ALElTeQPvQv0nqoKjYZVNG9D4-5DJRw8tCXwJ8BO
   CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
 
+on:
+  push:
+    branches: ["*"]
+
 jobs:
+  lint:
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@v3"
+      
+      - name: "Install linter"
+        run: "npm install eslint -g"
+
+      - name: "Run linter"
+        run: "echo make lint"
+
   deploy:
     runs-on: "ubuntu-20.04"
     steps:
@@ -24,5 +37,13 @@ jobs:
 
       - name: "Publish (not main)"
         if: ${{ github.ref != 'refs/heads/main' }}
+        run: "echo deploying to stging"
+      - uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ github.token }}
+          approvers: ololyas
+          minimum-approvals: 1
+          issue-title: "Deploy to PROD env"
+          issue-body: "Please approve or deny the deployment."
+      - name: "Deploy to PROD env"
         run: "make deploy"
-
