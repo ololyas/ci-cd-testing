@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/ololyas/experimentation/issues"
   },
-  "homepage": "https://github.com/ololyas/experimentation#readme"
+  "homepage": "https://github.com/ololyas/experimentation#readme",
+  "dependencies": {
+    "eslint": "^8.40.0"
+  }
 }
