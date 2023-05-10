@@ -13,11 +13,16 @@ jobs:
   lint:
     runs-on: "ubuntu-20.04"
     steps:
-      - uses: actions/checkout@v3
-      - uses: samuelmeuli/lint-action@v1
+      - name: "Checkout repository"
+        uses: actions/checkout@v3
+
+      - name: "Install dependencies"
+        run: "npm install -g eslint"
+      - name: "Run linters"
+        uses: samuelmeuli/lint-action@v1
         with:
           eslint: "true"
-          prettier: "true"
+
 
   deploy-stg:
     runs-on: "ubuntu-20.04"
