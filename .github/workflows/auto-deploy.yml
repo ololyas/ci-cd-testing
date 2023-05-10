@@ -22,7 +22,7 @@ jobs:
       - name: "Run linter"
         run: "echo make lint"
 
-  deploy:
+  deploy-stg:
     runs-on: "ubuntu-20.04"
     steps:
       - name: "Checkout repository"
@@ -32,9 +32,13 @@ jobs:
         run: "npm install wrangler -g"
 
       - name: "Publish (not main)"
-        if: ${{ github.ref != 'refs/heads/main' }}
         run: "echo deploying to stging"
-      - uses: trstringer/manual-approval@v1
+  
+  deploy-prd:
+    runs-on: "ubuntu-20.04"
+    steps:
+      - name: "Deploy to prd"
+        uses: trstringer/manual-approval@v1
         with:
           secret: ${{ github.token }}
           approvers: ololyas
@@ -43,3 +47,4 @@ jobs:
           issue-body: "Please approve or deny the deployment."
       - name: "Deploy to PROD env"
         run: "make deploy"
+      
