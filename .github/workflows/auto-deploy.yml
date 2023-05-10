@@ -15,12 +15,11 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@v3"
-      
-      - name: "Install linter"
-        run: "npm install eslint"
 
       - name: "Initiate linter"
-        run: "npm run lint"
+        run: "npx run lint"
+
+   
 
   deploy-stg:
     runs-on: "ubuntu-20.04"
