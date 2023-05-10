@@ -24,6 +24,7 @@ jobs:
 
   deploy-stg:
     runs-on: "ubuntu-20.04"
+    needs: ["lint"]
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@v3"
@@ -36,6 +37,7 @@ jobs:
   
   deploy-prd:
     runs-on: "ubuntu-20.04"
+    needs: ["lint"]
     steps:
       - name: "Deploy to prd"
         uses: trstringer/manual-approval@v1
