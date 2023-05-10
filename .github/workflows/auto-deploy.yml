@@ -11,15 +11,10 @@ on:
 
 jobs:
   lint:
-    runs-on: "ubuntu-20.04"
+    runs-on: ubuntu-latest
     steps:
-      - name: "Checkout repository"
-        uses: "actions/checkout@v3"
-
-      - name: "Initiate linter"
-        run: "npx run lint"
-
-   
+      - uses: actions/checkout@v2
+      - run: eslint .
 
   deploy-stg:
     runs-on: "ubuntu-20.04"
