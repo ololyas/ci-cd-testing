@@ -31,10 +31,6 @@ jobs:
       - name: "Install wrangler"
         run: "npm install wrangler -g"
 
-      - name: "Publish (main)"
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: "make deploy-main"
-
       - name: "Publish (not main)"
         if: ${{ github.ref != 'refs/heads/main' }}
         run: "echo deploying to stging"
