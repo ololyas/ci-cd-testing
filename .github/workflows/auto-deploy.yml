@@ -20,7 +20,7 @@ jobs:
         run: "npm install eslint"
 
       - name: "Initiate linter"
-        run: "eslint ."
+        run: "npm run lint"
 
   deploy-stg:
     runs-on: "ubuntu-20.04"
