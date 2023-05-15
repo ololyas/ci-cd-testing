@@ -6,24 +6,31 @@ env:
   CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
 
 on:
-  push:
-    branches: ["*"]
+  pull_request:
+    branches: 
+      - main
+    types: [opened, synchronize]
+  
 
 jobs:
   lint:
-    runs-on: "ubuntu-20.04"
+    runs-on: ubuntu-latest
     steps:
-      - name: "Checkout repository"
-        uses: "actions/checkout@v3"
-      
-      - name: "Install linter"
-        run: "npm install eslint -g"
-
-      - name: "Run linter"
-        run: "echo make lint"
-
-  deploy:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm ci
+      - uses: sibiraj-s/action-eslint@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          extensions: 'js,jsx,ts,tsx'
+          annotations: true
+          
+  deploy-stg:
     runs-on: "ubuntu-20.04"
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true 
+    needs: ["lint"]
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@v3"
@@ -31,23 +38,16 @@ jobs:
       - name: "Install wrangler"
         run: "npm install wrangler -g"
 
-      - name: "Publish (main)"
-        if: ${{ github.ref == 'refs/heads/main' }}
-        run: "echo deploying to prd"
-      - uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ github.token }}
-          approvers: ololyas
-          minimum-approvals: 1
-          issue-title: "Deploy to PROD env"
-          issue-body: "Please approve or deny the deployment."
-      - name: "Deploy to PROD env"
-        run: "make deploy"
-
       - name: "Publish (not main)"
-        if: ${{ github.ref != 'refs/heads/main' }}
         run: "echo deploying to stging"
-      - uses: trstringer/manual-approval@v1
+  
+  deploy-prd:
+    runs-on: "ubuntu-20.04"
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+    needs: ["lint"]
+    steps:
+      - name: "Deploy to prd"
+        uses: trstringer/manual-approval@v1
         with:
           secret: ${{ github.token }}
           approvers: ololyas
@@ -55,4 +55,5 @@ jobs:
           issue-title: "Deploy to PROD env"
           issue-body: "Please approve or deny the deployment."
       - name: "Deploy to PROD env"
-        run: "make deploy"
+        run: "echo make deploy"
+      
