@@ -8,8 +8,7 @@ env:
 on:
   pull_request:
     branches: 
-      - main
-      - stg
+      ['*']
     types: [opened, synchronize]
   
 
@@ -30,7 +29,7 @@ jobs:
           
   deploy-stg:
     runs-on: "ubuntu-20.04"
-    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true 
+    if: github.event_name == 'pull_request' 
     needs: ["lint"]
     steps:
       - name: "Checkout repository"
