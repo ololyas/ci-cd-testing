@@ -13,7 +13,7 @@ on:
   
 
 jobs:
-  lint:
+  predeploy-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -30,7 +30,7 @@ jobs:
   deploy-stg:
     runs-on: "ubuntu-20.04"
     if: github.event_name == 'pull_request' 
-    needs: ["lint"]
+    needs: ["predeploy-lint"]
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@v3"
@@ -44,7 +44,7 @@ jobs:
   deploy-prd:
     runs-on: "ubuntu-20.04"
     if: github.event_name == 'pull_request'
-    needs: ["lint"]
+    needs: ["predeploy-lint"]
     steps:
       - name: "Deploy to prd"
         uses: trstringer/manual-approval@v1
