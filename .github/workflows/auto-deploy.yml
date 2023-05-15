@@ -6,8 +6,11 @@ env:
   CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
 
 on:
-  push:
-    branches: ["*"]
+  pull_request:
+    branches: 
+      - main
+    types: [opened, synchronize]
+  
 
 jobs:
   lint:
@@ -26,6 +29,7 @@ jobs:
           
   deploy-stg:
     runs-on: "ubuntu-20.04"
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true 
     needs: ["lint"]
     steps:
       - name: "Checkout repository"
@@ -39,6 +43,7 @@ jobs:
   
   deploy-prd:
     runs-on: "ubuntu-20.04"
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     needs: ["lint"]
     steps:
       - name: "Deploy to prd"
