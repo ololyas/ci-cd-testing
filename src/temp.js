@@ -1,4 +1,4 @@
 const SHeesh="SHeesh"
 const ball="ball";
 
-console.log(SHeesh+"1")
+console.log(SHeesh+"1"*5);
