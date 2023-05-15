@@ -56,5 +56,3 @@ jobs:
           issue-body: "Please approve or deny the deployment."
       - name: "Deploy to PROD env"
         run: "echo make deploy"
-
-      # - name: "Checkout repository"
