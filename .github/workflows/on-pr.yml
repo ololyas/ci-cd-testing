@@ -4,7 +4,6 @@ env:
     CLOUDFLARE_API_TOKEN: ALElTeQPvQv0nqoKjYZVNG9D4-5DJRw8tCXwJ8BO
     CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
   
-
 on:
     pull_request:
       branches: 
