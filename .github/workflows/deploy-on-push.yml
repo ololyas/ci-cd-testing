@@ -7,11 +7,11 @@ env:
 
 on:
   push:
-    branches:
+    branches: 
       - main
-  
+   
 jobs:
-  push-lint:
+  predeploy-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,15 +24,19 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extensions: 'js,jsx,ts,tsx'
           annotations: true
-  
-  
           
   deploy-stg:
     runs-on: "ubuntu-20.04"
-    needs: ["push-lint"]
+    needs: ["predeploy-lint"]
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@v3"
+
+      - name: "Setup Node.js"
+        uses: "actions/setup-node@v2"
+        with:
+          node-version: "18.3.0"
+      - run: npm ci
       
       - name: "Install wrangler"
         run: "npm install wrangler -g"
@@ -42,8 +46,20 @@ jobs:
   
   deploy-prd:
     runs-on: "ubuntu-20.04"
-    needs: ["push-lint"]
+    needs: ["predeploy-lint"]
     steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@v3"
+
+      - name: "Setup Node.js"
+        uses: "actions/setup-node@v2"
+        with:
+          node-version: "18.3.0"
+      - run: npm ci
+      
+      - name: "Install wrangler"
+        run: "npm install wrangler -g"
+        
       - name: "Deploy to prd"
         uses: trstringer/manual-approval@v1
         with:
@@ -54,4 +70,3 @@ jobs:
           issue-body: "Please approve or deny the deployment."
       - name: "Deploy to PROD env"
         run: "echo make deploy"
-
