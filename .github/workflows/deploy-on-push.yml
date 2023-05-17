@@ -6,14 +6,12 @@ env:
   CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
 
 on:
-  pull_request:
-    branches: 
-      ['*']
-    types: [opened, synchronize]
+  push:
+    branches:
+      - main
   
-
 jobs:
-  predeploy-lint:
+  push-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,11 +24,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extensions: 'js,jsx,ts,tsx'
           annotations: true
+  
+  
           
   deploy-stg:
     runs-on: "ubuntu-20.04"
-    if: github.event_name == 'pull_request' 
-    needs: ["predeploy-lint"]
+    needs: ["push-lint"]
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@v3"
@@ -43,8 +42,7 @@ jobs:
   
   deploy-prd:
     runs-on: "ubuntu-20.04"
-    if: github.event_name == 'pull_request'
-    needs: ["predeploy-lint"]
+    needs: ["push-lint"]
     steps:
       - name: "Deploy to prd"
         uses: trstringer/manual-approval@v1
@@ -56,3 +54,4 @@ jobs:
           issue-body: "Please approve or deny the deployment."
       - name: "Deploy to PROD env"
         run: "echo make deploy"
+
