@@ -31,12 +31,6 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@v3"
-
-      - name: "Setup Node.js"
-        uses: "actions/setup-node@v2"
-        with:
-          node-version: "18.3.0"
-      - run: npm ci
       
       - name: "Install wrangler"
         run: "npm install wrangler -g"
@@ -50,12 +44,6 @@ jobs:
     steps:
       - name: "Checkout repository"
         uses: "actions/checkout@v3"
-
-      - name: "Setup Node.js"
-        uses: "actions/setup-node@v2"
-        with:
-          node-version: "18.3.0"
-      - run: npm ci
       
       - name: "Install wrangler"
         run: "npm install wrangler -g"
@@ -69,4 +57,4 @@ jobs:
           issue-title: "Deploy to PROD env"
           issue-body: "Please approve or deny the deployment."
       - name: "Deploy to PROD env"
-        run: "echo make deploy"
+        run: "make deploy"
