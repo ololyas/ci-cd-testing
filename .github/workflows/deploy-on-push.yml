@@ -11,7 +11,7 @@ on:
       - main
    
 jobs:
-  predeploy-lint:
+  auto-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -24,37 +24,12 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           extensions: 'js,jsx,ts,tsx'
           annotations: true
-          
-  deploy-stg:
-    runs-on: "ubuntu-20.04"
-    needs: ["predeploy-lint"]
-    steps:
-      - name: "Checkout repository"
-        uses: "actions/checkout@v3"
       
       - name: "Install wrangler"
         run: "npm install wrangler -g"
 
       - name: "Publish (not main)"
         run: "echo deploying to stging"
-  
-  deploy-prd:
-    runs-on: "ubuntu-20.04"
-    needs: ["predeploy-lint"]
-    steps:
-      - name: "Checkout repository"
-        uses: "actions/checkout@v3"
-      
-      - name: "Install wrangler"
-        run: "npm install wrangler -g"
-        
-      - name: "Deploy to prd"
-        uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ github.token }}
-          approvers: ololyas
-          minimum-approvals: 1
-          issue-title: "Deploy to PROD env"
-          issue-body: "Please approve or deny the deployment."
+
       - name: "Deploy to PROD env"
         run: "make deploy"
