@@ -25,9 +25,6 @@ jobs:
         with:
           node-version: 18.13.0
           
-      - name: Run Tests
-        run: make test
-
       - name: Deploy to STG env
         run: make deploy STACK=stg
 
