@@ -1,35 +1,36 @@
 name: "auto-deploy"
 
-
 env:
-  CLOUDFLARE_API_TOKEN: ALElTeQPvQv0nqoKjYZVNG9D4-5DJRw8tCXwJ8BO
-  CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+# env:
+#   CLOUDFLARE_API_TOKEN: ALElTeQPvQv0nqoKjYZVNG9D4-5DJRw8tCXwJ8BO
+#   CLOUDFLARE_ACCOUNT_ID: d7645b73787ae3d6eb140571ae7e64cb
 
 on:
   push:
-    branches: 
+    branches:
       - main
-   
+
 jobs:
   auto-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.3.0
-      - run: npm ci
-      - uses: sibiraj-s/action-eslint@v2
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          extensions: 'js,jsx,ts,tsx'
-          annotations: true
-      
-      - name: "Install wrangler"
-        run: "npm install wrangler -g"
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: "Publish (not main)"
-        run: "echo deploying to stging"
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.13.0
+          
+      - name: Run Tests
+        run: make test
 
-      - name: "Deploy to PROD env"
-        run: "make deploy"
+      - name: Deploy to STG env
+        run: make deploy STACK=stg
+
+      - name: Deploy to PROD env
+        run: make deploy STACK=prd
+
